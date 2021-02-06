@@ -28,7 +28,7 @@ SECRET_KEY = '@m@1!5vf6o#owmcdva9t924+b$r6c9he%7u#uuh7dazx^*ar#j'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1','.herokuapp.com','localhost:8000']
 
 
 
@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 ]
 
-SITE_ID = 1
+SITE_ID = 3
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL ='/accounts/login/' 
 
