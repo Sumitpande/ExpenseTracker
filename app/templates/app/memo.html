@@ -1,0 +1,368 @@
+{% extends "app/base.html" %} {% load static %}
+{% block style %}
+<style>
+
+
+ .blue {
+	 background-color: #407fde !important;
+}
+
+ div {
+	 position: relative;
+}
+ * {
+	 box-sizing: border-box;
+}
+ .icon {
+	 font-size: 2rem;
+	 
+}
+ .cont {
+	 display: flex;
+	 flex-wrap: wrap;
+	 align-items: flex-start;
+}
+ .card {
+	 background-color: #fff;
+	 overflow: hidden;
+	 color: #fff;
+	 background-color: #407fde;
+	 width: 280px;
+	 border-radius: 14px;
+	 box-shadow: 0px 0px 8px -3px rgba(0, 0, 0, 0.75), 0px 17px 22px -16px rgba(0, 0, 0, 0.75);
+	 margin: 0.5rem;
+}
+ .card .nav {
+	 display: flex;
+	 justify-content: space-between;
+	 background-color: rgba(0, 0, 0, 0.2);
+	 padding: 0.5rem;
+}
+ .card .title, .card .text {
+	 display: flex;
+	 
+	 align-items: center;
+}
+ .card .title , .card .text  {
+	 resize: none;
+	 width: 100%;
+	 background: none;
+	 font: inherit;
+	 color: inherit;
+	 height: 100%;
+	 overflow: hidden;
+	 border: none;
+	 padding: none;
+}
+
+ .card .title {
+	 font-weight: bold;
+	 font-size: 1.4rem;
+	 padding: 0.5rem 1rem 0.3rem 1rem;
+     float: left;
+}
+ .card .title {
+	 
+	 height: 1.5em;
+
+}
+ .card .text {
+	 padding: 0.3rem 1rem 1rem 1rem;
+     min-height: 120px;
+     float: left;
+}
+ 
+ 
+</style>
+
+{% endblock %}
+{% block body %}
+<div class="row" style="margin-top: 40px;">
+    <div class="col-4">
+        <form action="" id="form">
+            {% csrf_token %}
+            <div class="form-group mb-3">
+                <label for="exampleFormControlInput1">Title</label>
+                <input type="text" class="form-control" id="title" placeholder="">
+              </div>
+            <div class="form-group mb-3">
+                <label for="exampleFormControlTextarea1">Content</label>
+                <textarea class="form-control" id="content" rows="3"></textarea>
+              </div>
+            <input type="submit" id="create" class="btn btn-info" value="Create">
+        </form>
+        <form action="" id="edit-form">
+            {% csrf_token %}
+            <div class="form-group mb-3">
+                <label for="exampleFormControlInput1">Title</label>
+                <input type="text" class="form-control" id="edit-title" placeholder="">
+              </div>
+            <div class="form-group mb-3">
+                <label for="exampleFormControlTextarea1">Content</label>
+                <textarea class="form-control" id="edit-content" rows="3"></textarea>
+              </div>
+            <input type="submit" id="save" class="btn btn-info" value="Save">
+        </form>
+    </div>
+    
+    <div  class="col-8">
+        <div id="memos" class="cont">
+
+
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </div>
+</div>
+{% endblock  %}
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script>
+
+$(document).ready(function () {
+    
+
+    fetch('/memos')
+    .then(r => r.json())
+    .then(memos => {
+        memos.forEach((memo) => {
+            x = document.createElement('div')
+            x.className = `memo${memo.id}`
+            x.innerHTML=
+            `
+           
+                
+                <div class="card card-draggable blue">
+                    <div class="nav">
+                        <i>
+                            ${memo.date}
+                        </i>
+                        <i>
+                            <span>
+                                <a  id="edit${memo.id}"  data-id=" ${memo.id} " class="text-success p-2 bd-highlight editmemo" >
+                                    <img src="https://img.icons8.com/material-rounded/32/000000/edit--v2.png"/>    
+                                </a>
+                            
+                            </span>
+                            <span>
+                                
+                                <a  id="del${memo.id}"   class=" text-danger p-2 bd-highlight delmemo" >
+                                    <img src="https://img.icons8.com/windows/32/000000/delete-forever.png"/>
+                                </a>
+                            </span>
+                            
+                            
+                        </i>
+                    </div>
+                    <div class="title" id="title${memo.id}">
+                        ${memo.title}
+                    </div>
+                    <div class="text" id="content${memo.id}">
+                        ${memo.content}
+                    </div>
+                </div>
+         
+
+           
+            
+            `
+            document.querySelector('#memos').appendChild(x);
+            
+            if(document.querySelector(`#edit${memo.id}`)){
+                document
+                .querySelector(`#edit${memo.id}`)
+                .addEventListener("click", () => editmemo(memo));
+            }
+            
+
+            if (document.querySelector(`#del${memo.id}`)){
+                document.querySelector(`#del${memo.id}`)
+                .addEventListener("click", () => deletememo(memo.id));
+        
+
+            }
+            
+        })
+
+
+    })
+
+    $('#edit-form').hide();
+    
+
+    document
+    .querySelector(`#form`)
+    .addEventListener('submit',
+
+    // $('#form').submit(
+        (p) => {
+        p.preventDefault();
+        var title = document.querySelector('#title');
+        var content = document.querySelector('#content');
+        console.log(title,content);
+        fetch('/memos',{
+            method: "POST",
+            body: JSON.stringify({
+                title: title.value,
+                content: content.value
+                
+        })
+        })
+        .then(response => response.json())
+        .then(memo => {
+            
+            
+            x = document.createElement('div')
+            x.className = `memo${memo.id}`
+            console.log(`POST : ${memo}`);
+            x.innerHTML=
+            `
+
+           
+                
+                <div class="card card-draggable blue">
+                    <div class="nav">
+                        <i>
+                            ${memo.date}
+                        </i>
+                        <i>
+                            <span>
+                                <a  id="edit${memo.id}"  data-id=" ${memo.id} " class="text-success p-2 bd-highlight editmemo" >
+                                    <img src="https://img.icons8.com/material-rounded/32/000000/edit--v2.png"/>    
+                                </a>
+                            
+                            </span>
+                            <span>
+                                
+                                <a  id="del${memo.id}"   class=" text-danger p-2 bd-highlight delmemo" >
+                                    <img src="https://img.icons8.com/windows/32/000000/delete-forever.png"/>
+                                </a>
+                            </span>
+                            
+                            
+                        </i>
+                    </div>
+                    <div class="title" id="title${memo.id}">
+                        ${memo.title}
+                    </div>
+                    <div class="text" id="content${memo.id}">
+                        ${memo.content}
+                    </div>
+                </div>
+           
+
+            `
+            document.querySelector('#memos').appendChild(x);
+            if(document.querySelector(`#edit${memo.id}`)){
+                document
+                .querySelector(`#edit${memo.id}`)
+                .addEventListener("click", () => editmemo(memo));
+            }
+            
+            if (document.querySelector(`#del${memo.id}`)){
+                document.querySelector(`#del${memo.id}`)
+                .addEventListener("click", () => deletememo(memo.id));
+        
+
+            }
+            
+
+
+
+           
+        document.getElementById("form").reset();
+        })
+        
+    },false)
+
+
+var deletememo = (id) =>{
+    console.log(id);
+    fetch(`/memo/delete/${id}`)
+        .then(response => response.json())
+        .then(memo => {
+            $(`.memo${id}`).hide();
+            
+            
+        })
+}
+
+
+
+
+var editmemo = (memo) =>{
+console.log("function");
+
+$('#form').hide();
+$('#edit-form').show();
+
+var title = document.querySelector('#edit-title');
+var content = document.querySelector('#edit-content');
+var save = document.querySelector('#save');
+title.value = `${memo.title}` ;
+content.value = `${memo.content}`;
+
+
+
+$('#edit-form').submit(
+(p) => {
+    p.preventDefault();
+    
+    
+
+    fetch(`/memo/${memo.id}`,{
+                method: "PUT",
+                body: JSON.stringify({
+                    title: title.value,
+                    content: content.value
+                })
+            })
+            .then(response => response.json())
+            .then(e => {
+            console.log(`PUT : ${e}`);
+            
+            $('#form').show();
+            $('#edit-form').hide();
+            title = title.value
+            content = content.value
+            console.log(`${title}`);
+            console.log(`${content}`);
+            document.querySelector(`#title${memo.id}`).innerHTML= `<strong style="font-size:20px;">${title}</strong>` ; 
+            document.querySelector(`#content${memo.id}`).innerHTML= content ;
+
+    document.getElementById("edit-form").reset();
+    })
+})
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+})
+
+
+</script>
+{% endblock %}
+

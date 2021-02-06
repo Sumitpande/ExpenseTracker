@@ -1,0 +1,77 @@
+{% extends "app/base.html" %} {% load static %}
+{% block body %}
+<div class="row" style="margin-top: 40px;">
+    <div class="col-4">
+      <div class="list-group" >
+        <a class="list-group-item active" href="{% url 'income-add' %}" >Income</a>
+        <a class="list-group-item " href="{% url 'expense-add' %}">Expense</a>
+        <a class="list-group-item " href="{% url 'transfer-add' %}">Transfer</a>
+  
+      </div>
+    </div>
+    <div class="col-8">
+      <div id="nav-tabContent">
+        <div id="list-Income">
+          <h2>Income</h2>
+          <form action="  " method="POST"  style="padding:20px">{% csrf_token %}
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">₹</span>
+                
+                
+              </div>{{form.cost}}
+              <span class="input-group-text">0.00</span>
+            </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">{{form.account.label}} </label>
+              </div>
+              {{form.account}}
+            </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">{{form.category.label}}</label>
+              </div>
+              {{form.category}}
+            </div>
+            
+            
+            <div class="form-group mb-3">
+              <label for="exampleFormControlTextarea1">{{form.message.label}}</label>
+              {{form.message}}
+            </div>
+            
+            
+            <input type="submit" class="btn btn-primary" value="Save">
+          </form>
+  
+        </div>
+     
+        
+  
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  
+  
+{% endblock  %}
+
+{% block script %}
+<script>
+  $(document).ready(function () {
+
+    $('input').addClass('form-control');
+    $('input').last().removeClass('form-control');
+
+
+
+
+  })
+
+
+</script> 
+{% endblock %}

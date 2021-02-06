@@ -1,0 +1,131 @@
+{% extends "app/base.html" %} {% load static %}
+{% block body %}
+
+<div style="font-size: 40px;margin: 40px;">
+    Bookmarks
+</div>
+{% for t in trans %}
+
+<div class="alert alert-dark" style="margin: 40px;">
+    <div class="d-flex justify-content-between">
+        {% if t in income %}
+        <div style="width: 20%;">{{ t.category }}</div>
+        <div class="float-left" style="width: 30%;" >{{ t.message }}
+            <small  class="form-text text-muted"> {{ t.account }} </small>
+        </div>
+        <div class="text-success" style="width: 15%;">₹ {{ t.cost }}</div>
+        <div style="width: 15%;">
+            <p>
+                <a href="{% url 'income-update' pk=t.id %}">Edit</a>
+                |
+                <a href="{% url 'income-delete' pk=t.id %}">Delete</a>
+            </p>
+        </div>
+        <div style="width: 15%;">
+            {{ t.date|date:"D, d M, Y" }}
+        </div>
+        <div class="text-center" style="width: 5%;">
+            {% if t.bookmark %}
+            <a href="{% url 'bookmarki' id=t.id %}">
+                <img style="height: 20px;width: 20px;" src="{% static 'app/book.png' %}" alt="">
+            </a>
+            {% else %}
+            <a href="{% url 'bookmarki' id=t.id %}">
+                <img style="height: 20px;width: 20px;" src="{% static 'app/unbook.png' %}" alt="">
+
+            </a>
+            
+            {% endif %}
+            
+        </div>
+        {% endif %}
+
+        {% if t in expense %}
+        <div style="width: 20%;">{{ t.category }}</div>
+        <div class="" style="width: 30%;">{{ t.message }}
+            <small  class="form-text text-muted"> {{ t.account }} </small>
+        </div>
+        <div class="text-danger" style="width: 15%;">₹ {{ t.cost }}</div>
+        <div style="width: 15%;">
+            <p>
+                <a href="{% url 'expense-update' pk=t.id %}">Edit</a>
+                |
+                <a href="{% url 'expense-delete' pk=t.id %}">Delete</a>
+            </p>
+        </div>
+        <div style="width: 15%;">
+            {{t.date|date:"D, d M, Y" }}
+        </div>
+        <div class="text-center" style="width: 5%;">
+            {% if t.bookmark %}
+            <a href="{% url 'bookmarke' id=t.id %}">
+                <img style="height: 20px;width: 20px;" src="{% static 'app/book.png' %}" alt="">
+            </a>
+            {% else %}
+            <a href="{% url 'bookmarke' id=t.id %}">
+                <img style="height: 20px;width: 20px;" src="{% static 'app/unbook.png' %}" alt="">
+
+            </a>
+            
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if t in transfer %}
+        <div style="width: 20%;">Transfer</div>
+        <div class="float-left" style="width: 30%;">{{ t.message }}
+            <small  class="form-text text-muted"> {{ t.From }} --> {{ t.to }} </small>
+        </div>
+        <div class="text-dark" style="width: 15%;">₹ {{ t.cost }}</div>
+        <div style="width: 15%;">
+            <p>
+                <a href="{% url 'transfer-update' pk=t.id %}">Edit</a>
+                |
+                <a href="{% url 'transfer-delete' pk=t.id %}">Delete</a>
+            </p>
+            
+        </div>
+        <div style="width: 15%;">
+            {{ t.date|date:"D, d M, Y" }}
+        </div>
+        <div class="text-center" style="width: 5%;">
+            {% if t.bookmark %}
+            <a href="{% url 'bookmarkt' id=t.id %}">
+                <img style="height: 20px;width: 20px;" src="{% static 'app/book.png' %}" alt="">
+            </a>
+            {% else %}
+            <a href="{% url 'bookmarkt' id=t.id %}">
+                <img style="height: 20px;width: 20px;" src="{% static 'app/unbook.png' %}" alt="">
+
+            </a>
+            
+            {% endif %}
+        </div>
+        
+        {% endif %}
+    </div>
+</div>
+
+{% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+{% block script %}
+
+
+
+
+{% endblock %}

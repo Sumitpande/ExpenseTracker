@@ -1,0 +1,94 @@
+{% extends "app/base.html" %} {% load static %}
+{% block body %}
+<div style="margin: 30px;">
+    <div class="btn-group" role="group" aria-label="Basic example" style="margin-bottom: 10px;">
+        <a type="button" class="btn btn-secondary  " href="{% url 'income-list' %}">Income</a>
+        <a type="button" class="btn btn-secondary" href="{% url 'expense-list' %}">Expense</a>
+        <a type="button" class=" btn btn-secondary active" href="{% url 'transfer-list' %}">Transfer</a>
+    </div>
+    <div class="btn-group" role="group" aria-label="Basic example" style="margin-bottom: 10px;">
+        <a type="button" class="btn btn-secondary  " href="{% url 'trans_daily' %}">Daily</a>
+        <a type="button" class="btn btn-secondary" href="{% url 'trans_weekly' %}">Weekly</a>
+        <a type="button" class=" btn btn-secondary " href="{% url 'trans_monthly' %}">Monthly</a>
+    </div>
+   
+
+    <table id="example" class="table table-striped table-bordered nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th>Cost</th>
+                <th>Message</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Date</th>
+                <th>Action</th>
+                <th>Action</th>
+                <th>Bookmark</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for x in transfer_list %}
+            <tr>
+                <td class="text-success">{{x.cost}}</td>
+                <td>{{x.message}}</td>
+                <td>{{x.From}}</td>
+                <td>{{x.to}}</td>
+                
+                <td>{{x.date}}</td>
+                <td>
+                    <a  href="{% url 'transfer-update' pk=x.id %}">Edit</a>
+                </td>
+                <td>
+                    <a  href="{% url 'transfer-delete' pk=x.id %}">Delete</a>
+                </td>
+                <td>
+                    {% if x.bookmark %}
+                    <a href="{% url 'bookmarkt' id=x.id %}">
+                        <img style="height: 20px;width: 20px;" src="{% static 'app/book.png' %}" alt="">
+                    </a>
+                    {% else %}
+                    <a href="{% url 'bookmarkt' id=x.id %}">
+                        <img style="height: 20px;width: 20px;" src="{% static 'app/unbook.png' %}" alt="">
+
+                    </a>
+                    
+                    {% endif %}
+                </td>
+            </tr>
+
+            {% endfor %}
+            
+        
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Cost</th>
+                <th>Message</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Date</th>
+                <th>Action</th>
+                <th>Action</th>
+                <th>Bookmark</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+
+<script type="text/javascript">
+    $(document).ready( function () {
+      $('#example').DataTable({
+    dom: 'B<"clear">lfrtip',
+    buttons: {
+      name: 'primary',
+      buttons: [ 'copy', 'excel', 'pdf' ]
+      }});
+    });
+</script>
+      
+{% endblock %}
